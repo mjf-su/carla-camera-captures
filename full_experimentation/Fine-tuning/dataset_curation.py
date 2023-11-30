@@ -29,7 +29,7 @@ for scenario in scenarios:
 
             questions.append(exp_responses["vlm_prompt"])
             answers.append(exp_responses["vlm_responses"][i])
-            filenames.append(exp_responses["image_names"][i])
+            filenames.append(scenario + "/" + exp + "/image_data/" + exp_responses["image_names"][i])
     
     np.savez(os.path.join(scenario_folder, dataset_file), questions = questions, answers = answers, filenames = filenames)
 
