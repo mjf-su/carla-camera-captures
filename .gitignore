@@ -1,3 +1,4 @@
+full_experimentation/Fine-tuning/generate_nominal_responses.py
 baseline_experimentation/
 .vscode/
 full_experimentation/GPT4V-zero-shot/
@@ -10,4 +11,3 @@ vehicle_data.npz
 gpt4v_newFormat_tokenLimit.npz
 gpt4v_responses.npz
 generate_anomaly_responses.py
-generate_nominal_responses.py

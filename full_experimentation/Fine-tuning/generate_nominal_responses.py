@@ -47,21 +47,6 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
 
-def return_api_key(count): # count is number of queries from program
-    if count < 100: 
-        return "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" # jfoutter@gmail
-    elif count < 200:
-        return "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" # thebeatlesfab4@gmail
-    elif count < 300:
-        return "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" # mfoutter@gmail
-    elif count < 400:
-        return "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" # mfoutter@stanford
-    elif count < 500:
-        return "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" # rfoutter@gmail
-    else:
-        print("Error! Too many calls to GPT4V API today.")
-        return "limit"
-
 count = 0
 for exp in os.listdir(scenario_folder):
     if "exp" not in exp:
