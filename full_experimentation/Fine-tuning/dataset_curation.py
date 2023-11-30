@@ -3,9 +3,9 @@ import json
 import numpy as np
 
 folder = os.path.dirname(__file__)
-scenarios = ["nominal_stop_sign", "nominal_traffic_light"] # scenarios represented in the dataset
-response_file = "vlm_responses.npz"
-dataset_file = "VQADataset.npz"
+scenarios = ["nominal_stop_sign"] # scenarios represented in the dataset
+response_file = "trim_vlm_responses.npz"
+dataset_file = "trim_VQADataset.npz"
 
 for scenario in scenarios:
     scenario_folder = os.path.join(folder, "data", scenario) # scenario type
