@@ -7,12 +7,12 @@ scenarios = ["nominal_stop_sign", "nominal_traffic_light"] # scenarios represent
 response_file = "vlm_responses.npz"
 dataset_file = "VQADataset.npz"
 
-questions = []
-answers = []
-filenames = []
-
 for scenario in scenarios:
     scenario_folder = os.path.join(folder, "data", scenario) # scenario type
+
+    questions = []
+    answers = []
+    filenames = []
 
     with open(os.path.join(scenario_folder, "incorrect_labels.json"), 'r') as js:
         incorrect_labels = json.load(js)
