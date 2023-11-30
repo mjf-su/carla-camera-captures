@@ -2,7 +2,6 @@ baseline_experimentation/
 .vscode/
 full_experimentation/GPT4V-zero-shot/
 params/
-*.jpg
 yolo_detection_annotations.npy
 llm_responses.npz
 llm_data.npz
@@ -10,3 +9,5 @@ llm_data.npz
 vehicle_data.npz
 gpt4v_newFormat_tokenLimit.npz
 gpt4v_responses.npz
+generate_anomaly_responses.py
+generate_nominal_responses.py
