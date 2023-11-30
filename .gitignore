@@ -1,0 +1,12 @@
+baseline_experimentation/
+.vscode/
+full_experimentation/GPT4V-zero-shot/
+params/
+*.jpg
+yolo_detection_annotations.npy
+llm_responses.npz
+llm_data.npz
+*yaml.mp4
+vehicle_data.npz
+gpt4v_newFormat_tokenLimit.npz
+gpt4v_responses.npz
