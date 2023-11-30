@@ -3,7 +3,7 @@ import numpy as np
 import json
 
 folder = os.path.dirname(__file__)
-target = "nominal_traffic_light"
+target = "nominal_stop_sign"
 target_folder = os.path.join(folder, "data", target)
 response_file = "vlm_responses.npz"
 incorrect_labels = {}
