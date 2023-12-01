@@ -7,8 +7,8 @@ import requests
 """--- This file generates the ground truth classifications (using GPT4V) of nominal scenes to fine-tune a local VLM ---"""
 
 project_folder = os.path.dirname(__file__)
-target = "anomaly_stop_sign"
-scenario_folder = os.path.join(project_folder, "data", target)
+scenarios = ["anomaly_stop_sign"]
+response_file_name = "vlm_responses.npz"
 
 vlm_prompt = '''I am the fault monitor for a vision-based autonomous vehicle. My job is to analyze the vehicle's observations and identify anything that could cause the vehicle to take actions that are unsafe, unpredictable or violate traffic rules. For each object that the vehicle observes, I will reason about whether the object constitutes a normal observation or an anomaly. Normal observations do not detrimentally affect the vehicle's performance, whereas anomalies might. Finally, I will classify whether the overall scenario is normal or abnormal. That is, I will output a response which follows the structure below: 
 
@@ -47,82 +47,82 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
 
-def return_api_key(count): # count is number of queries from program
-    if count < 100:
-        return "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"
-    elif count < 200:
-        return "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"
-    elif count < 300:
-        return "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"
-    elif count < 400:
-        return "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"
-    else:
-        print("Error! Too many calls to GPT4V API today.")
-        return "limit"
-
 count = 0
-for exp in os.listdir(scenario_folder):
-    if "exp" not in exp:
-        continue
+for scenario in scenarios:
+    scenario_folder = os.path.join(project_folder, "data", scenario)
     
-    vlm_responses = []
-    images = []
-    exp_folder = os.path.join(scenario_folder, exp)
-    image_folder = os.path.join(exp_folder, "image_data")
-    vehicle_data = np.load(os.path.join(exp_folder, "vehicle_data.npz"))
+    for exp in os.listdir(scenario_folder):
+        if "exp" not in exp:
+            continue
+        
+        exp_folder = os.path.join(scenario_folder, exp)
+        image_folder = os.path.join(exp_folder, "image_data")
+        response_file_path = os.path.join(exp_folder, response_file_name)
+        vehicle_data = np.load(os.path.join(exp_folder, "vehicle_data.npz"))
+        anomaly_detected = vehicle_data["anomaly_detected"]
 
-    response_file = os.path.join(image_folder, "gpt4v_responses_newFormat.npz")
-    anomaly_detected = vehicle_data["anomaly_detected"]
-    filenames = vehicle_data["filenames"]
-    for image in filenames[anomaly_detected]:
-
-        # Getting the base64 string
-        base64_image = encode_image(os.path.join(image_folder, image))
-        api_key = return_api_key(count)
-
-        if api_key == "limit":
-            break
+        if os.path.isfile(response_file_path): # load current progress
+            response_file = np.load(response_file_path)
+            vlm_responses = response_file["vlm_responses"]
+            image_names = response_file["image_names"]
         else:
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}"
-            }
+            vlm_responses = [] # start from scratch
+            image_names = []
 
-            payload = {
-                "model": "gpt-4-vision-preview",
-                "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                    {
-                        "type": "text",
-                        "text": vlm_prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                        "url": f"data:image/jpeg;base64,{base64_image}"
-                        }
+        if len(vlm_responses) == len(anomaly_detected): # already finished analysis
+            continue
+        else:
+            for image in os.listdir(image_folder): # start or resume analysis 
+                if "frame" not in image or image in image_names: # skip non-images and already processed images
+                    continue
+
+                # Getting the base64 string
+                base64_image = encode_image(os.path.join(image_folder, image))
+                api_key = return_api_key(count)
+
+                if api_key == "limit":
+                    break
+                else:
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {api_key}"
                     }
-                    ]
-                }
-                ],
-                "max_tokens": 3000
-            }
 
-            done = False
-            while not done:
-                try:
-                    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-                    answer = response.json()["choices"][0]["message"]["content"]
-                    vlm_responses.append(answer)
-                    images.append(image)
-                    done = True
-                    time.sleep(30) # stay under 10k TPM limit
-                    
-                    print("Classified on " + image + " in " + exp)
-                except:
-                    print("OpenAI server error... Let's try again.")
-                    time.sleep(2)
-            count += 1
-    np.savez(response_file, gpt4v_responses = vlm_responses, image_names = images, vlm_prompt = vlm_prompt)
+                    payload = {
+                        "model": "gpt-4-vision-preview",
+                        "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                            {
+                                "type": "text",
+                                "text": vlm_prompt
+                            },
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                                }
+                            }
+                            ]
+                        }
+                        ],
+                        "max_tokens": 3000
+                    }
+
+                    done = False
+                    while not done:
+                        try:
+                            response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+                            answer = response.json()["choices"][0]["message"]["content"]
+                            vlm_responses.append(answer)
+                            image_names.append(image)
+                            done = True
+                            time.sleep(30) # stay under 10k TPM limit
+                            
+                            print("Classified on " + image + " in " + exp)
+                        except:
+                            print("OpenAI server error... Let's try again.")
+                            time.sleep(2)
+                    count += 1
+            np.savez(response_file_path, vlm_responses = vlm_responses, image_names = image_names, anomaly_detected = anomaly_detected, vlm_prompt = vlm_prompt)
