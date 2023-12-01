@@ -5,7 +5,7 @@ import copy
 import time
 
 folder = os.path.dirname(__file__)
-target = "nominal_stop_sign"
+target = "nominal_traffic_light"
 target_folder = os.path.join(folder, "data", target)
 response_file = "vlm_responses.npz"
 trim_response_file = "trim_vlm_responses.npz"
@@ -45,11 +45,11 @@ for exp in os.listdir(target_folder):
 
             cut_index = -1
             for j, p in enumerate(copy.copy(paragraphs[1:])): # retain object detection
-                if "classification" not in p.lower() or "3." not in p.lower():
-                    continue # ignore other commentary
-                elif "overall scenario classification" in p.lower(): # ignore after final classification
+                if "overall scenario classification" in p.lower(): # ignore after final classification
                     cut_index = j+2
                     break
+                elif "classification" not in p.lower() or "3." not in p.lower():
+                    continue # ignore other commentary
                 else:
                     split = p.split('\n')
                     paragraphs[j+1] = split[0] + "\n" + split[-3][3:] + "\n" + split[-1] # retain object desc, last question and object classification
