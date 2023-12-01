@@ -3,7 +3,7 @@ import json
 import numpy as np
 
 folder = os.path.dirname(__file__)
-scenarios = ["nominal_stop_sign"] # scenarios represented in the dataset
+scenarios = ["nominal_traffic_light"] # scenarios represented in the dataset
 response_file = "trim_vlm_responses.npz"
 dataset_file = "trim_VQADataset.npz"
 
