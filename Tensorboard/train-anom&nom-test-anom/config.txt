@@ -1,0 +1,5 @@
+train_dataset_exp = {"anomaly_stop_sign": ["exp_1", "exp_2", "exp_3", "exp_4", "exp_5", "exp_6", "exp_7", "exp_8", "exp_9", "exp_10"],
+                     "nominal_traffic_light": ["exp_1", "exp_2", "exp_3"]}
+anom_test_dataset_exp = {"anomaly_stop_sign": ["exp_11", "exp_12", "exp_13", "exp_14", "exp_15", "exp_16"]}
+nom_test_dataset_exp = {"nominal_traffic_light": ["exp_6", "exp_7", "exp_8", "exp_9", "exp_10"],
+                     "nominal_stop_sign": ["exp_6", "exp_7", "exp_8", "exp_9", "exp_10"]}

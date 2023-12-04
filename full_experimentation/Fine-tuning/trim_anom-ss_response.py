@@ -74,6 +74,8 @@ for exp in os.listdir(scenario_folder):
                     break
 
             if image_names[i] in false_negatives[exp]:
+                
+                
                 index = random.randint(0, len(ss_billboard_obj)-1)
                 paragraphs[0] += ss_billboard_obj[index]
                 paragraphs.insert(cut_index, ss_billboard_desc[index])
@@ -118,8 +120,8 @@ for exp in os.listdir(scenario_folder):
             trim_nom_responses.append(trim_nom_response)
             trim_nom_image_names.append(image_names[i])            
 
-    num_anom += len(trim_anom_image_names)
-    np.savez(os.path.join(scenario_folder, exp, trim_anom_response_file), vlm_responses = trim_anom_responses, image_names = trim_anom_image_names, vlm_prompt = experiment["vlm_prompt"])
-    np.savez(os.path.join(scenario_folder, exp, trim_nom_response_file), vlm_responses = trim_nom_responses, image_names = trim_nom_image_names, vlm_prompt = experiment["vlm_prompt"])
+    # num_anom += len(trim_anom_image_names)
+    # np.savez(os.path.join(scenario_folder, exp, trim_anom_response_file), vlm_responses = trim_anom_responses, image_names = trim_anom_image_names, vlm_prompt = experiment["vlm_prompt"])
+    # np.savez(os.path.join(scenario_folder, exp, trim_nom_response_file), vlm_responses = trim_nom_responses, image_names = trim_nom_image_names, vlm_prompt = experiment["vlm_prompt"])
 
 print(num_anom, "anomalies for fine-tuning.")

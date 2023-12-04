@@ -7,7 +7,7 @@ import requests
 """--- This file generates the ground truth classifications (using GPT4V) of nominal scenes to fine-tune a local VLM ---"""
 
 project_folder = os.path.dirname(__file__)
-scenarios = ["anomaly_traffic_light"]
+scenarios = ["anomaly_ood"]
 response_file_name = "vlm_responses.npz"
 
 vlm_prompt = '''I am the fault monitor for a vision-based autonomous vehicle. My job is to analyze the vehicle's observations and identify anything that could cause the vehicle to take actions that are unsafe, unpredictable or violate traffic rules. For each object that the vehicle observes, I will reason about whether the object constitutes a normal observation or an anomaly. Normal observations do not detrimentally affect the vehicle's performance, whereas anomalies might. Finally, I will classify whether the overall scenario is normal or abnormal. That is, I will output a response which follows the structure below: 
