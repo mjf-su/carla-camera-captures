@@ -7,7 +7,7 @@ folder = os.path.dirname(__file__)
 target = "nominal_stop_sign"
 target_folder = os.path.join(folder, "data", target)
 response_file = "vlm_responses.npz"
-trim_response_file = "trim_vlm_responses.npz"
+trim_response_file = "trim_nom_vlm_responses.npz"
 
 with open(os.path.join(target_folder, "incorrect_labels.json"), 'r') as io:
     incorrect_labels = json.load(io)
@@ -46,3 +46,5 @@ for exp in os.listdir(target_folder):
             trim_image_names.append(image_names[i])
     assert len(trim_image_names) > 0 and len(trim_responses) > 0
     np.savez(os.path.join(target_folder, exp, trim_response_file), vlm_responses = trim_responses, image_names = trim_image_names, vlm_prompt = experiment["vlm_prompt"])
+    if os.path.isfile(os.path.join(target_folder, exp, "yolo_detection_annotations.npy")):
+        os.remove(os.path.join(target_folder, exp, "yolo_detection_annotations.npy"))

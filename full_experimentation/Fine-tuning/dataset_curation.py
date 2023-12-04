@@ -5,8 +5,8 @@ import numpy as np
 
 folder = os.path.dirname(__file__)
 scenarios = ["nominal_traffic_light", "nominal_stop_sign"] # scenarios represented in the dataset
-response_file = "trim_vlm_responses.npz" # trimmed responses already exclude incorrect classifications and incorrect formats
-dataset_file = "trim_VQADataset.npz"
+response_file = "trim_nom_vlm_responses.npz" # trimmed responses already exclude incorrect classifications and incorrect formats
+dataset_file = "trim_nom_VQADataset.npz"
 
 for scenario in scenarios:
     scenario_folder = os.path.join(folder, "data", scenario) # scenario type
@@ -26,8 +26,10 @@ for scenario in scenarios:
             questions.append(exp_responses["vlm_prompt"])
             answers.append(exp_responses["vlm_responses"][i])
             filenames.append(scenario + "/" + exp + "/image_data/" + exp_responses["image_names"][i]) # prepare image paths for colab
+        
         np.savez(os.path.join(exp_folder, dataset_file), questions = questions, answers = answers, filenames = filenames)
 
-
+    if os.path.isfile(os.path.join(exp_folder, "trim_VQADataset.npz")):
+        os.remove(os.path.join(exp_folder, "trim_VQADataset.npz"))
 
 

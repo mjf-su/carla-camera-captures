@@ -4,7 +4,7 @@ import copy
 import json
 
 folder = os.path.dirname(__file__)
-scenario = "anomaly_traffic_light"
+scenario = "anomaly_stop_sign"
 scenario_folder = os.path.join(folder, "data", scenario)
 response_file = "vlm_responses.npz"
 # trim_response_file = "trim_vlm_responses.npz"
@@ -63,11 +63,17 @@ for exp in os.listdir(scenario_folder):
                     scene_classification.append(True)
 
             if anomaly_detected[i]:
-                frame_fn += 0 if np.any(scene_classification) else 1
-                false_negatives[exp].append(image_names[i])
+                if np.any(scene_classification):
+                    continue # correct classification
+                else:
+                    frame_fn += 1
+                    false_negatives[exp].append(image_names[i])
             else:
-                fp += 1 if np.any(scene_classification) else 0
-                incorrect_labels[exp].append(image_names[i]) # store image to ignore in fine-tuning
+                if np.any(scene_classification):
+                    fp += 1
+                    incorrect_labels[exp].append(image_names[i]) # store image to ignore in fine-tuning
+                else:
+                    continue # correct classification
 
         # else: # trim response for fine-tuning
         #     paragraphs = response.split("\n\n") # split response into paragraphs
