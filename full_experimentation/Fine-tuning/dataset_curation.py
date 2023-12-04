@@ -29,7 +29,7 @@ for scenario in scenarios:
         
         np.savez(os.path.join(exp_folder, dataset_file), questions = questions, answers = answers, filenames = filenames)
 
-    if os.path.isfile(os.path.join(exp_folder, "trim_VQADataset.npz")):
-        os.remove(os.path.join(exp_folder, "trim_VQADataset.npz"))
+        if os.path.isfile(os.path.join(exp_folder, "trim_VQADataset.npz")):
+            os.remove(os.path.join(exp_folder, "trim_VQADataset.npz"))
 
 
