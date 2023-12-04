@@ -84,11 +84,11 @@ for exp in os.listdir(scenario_folder):
             for j, p in enumerate(copy.copy(paragraphs[1:])): # retain object detection
                 if "overall scenario classification" in p.lower():
                     break
-                elif "classification" not in p.lower() or "3." not in p.lower():
+                elif "classification" not in p.lower() or "4." not in p.lower():
                     continue # ignore other commentary
                 else:
                     split = p.split('\n')
-                    paragraphs[j+1] = split[0] + "\n" + split[-3][3:] + "\n" + split[-1] # retain object desc, last question and object classification
+                    paragraphs[j+1] = split[0] + "\n" + split[-2][3:] + "\n" + split[-1] # retain object desc, last question and object classification
             paragraphs = paragraphs[:cut_index+1]
             trim_anom_response = "\n\n".join(paragraphs)
 
