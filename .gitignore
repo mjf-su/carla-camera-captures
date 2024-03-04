@@ -12,3 +12,4 @@ gpt4v_newFormat_tokenLimit.npz
 gpt4v_responses.npz
 generate_anomaly_responses.py
 Tensorboard/
+full_experimentation/
